@@ -1,8 +1,11 @@
+import random
+
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.uix.image import Image
 from kivy.core.window import Window
 from kivy.clock import Clock
+
 
 class Sprite(Image):
     def __init__(self, **kwargs):
@@ -40,10 +43,37 @@ class Background(Widget):
     def update(self):
         self.x -= 2
         self.image_dupe.x -= 2
-
         if self.image.right <= 0:
             self.image.x = 0
             self.image_dupe.x = self.width
+
+class Pipe(Widget):
+    def __init__(self, pos):
+        super(Pipe, self).__init__(pos=pos)
+        self.top_image = Sprite(source='images/pipe_top.png')
+        self.top_image.pos = (self.x, self.y + 3.5 * 24)
+        self.add_widget(self.top_image)
+        self.bottom_image = Sprite(source='images/pipe_bottom.png')
+        self.bottom_image.pos = (self.x, self.y - self.bottom_image.height)
+        self.add_widget(self.bottom_image)
+        self.width = self.top_image.width
+
+    def update(self):
+        self.x -= 2
+        self.top_image.x = self.bottom_image.x = self.x
+        if self.right < 0:
+            self.parent.remove_widget(self)
+
+class Pipes(Widget):
+    add_pipe = 0
+    def update(self, dt):
+        for child in list(self.children):
+            child.update()
+        self.add_pipe -= dt
+        if self.add_pipe < 0:
+            y = random.randint(self.y + 50, self.height - 50 - 3.5 * 24)
+            self.add_widget(Pipe(pos=(self.width, y)))
+            self.add_pipe = 1.5
 
 class Ground(Sprite):
     def update(self):
