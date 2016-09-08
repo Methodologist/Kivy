@@ -119,15 +119,12 @@ class Game(Widget):
     def update(self, dt):
         if self.game_over:
             return
-
         self.background.update()
         self.bird.update()
         self.ground.update()
         self.pipes.update(dt)
-
         if self.bird.collide_widget(self.ground):
             self.game_over = True
-
         for pipe in self.pipes.children:
             if pipe.top_image.collide_widget(self.bird):
                 self.game_over = True
@@ -139,7 +136,6 @@ class Game(Widget):
                 self.score_label.text = str(self.score)
                 sfx_score = SoundLoader.load('flappy/audio/score.wav')
                 sfx_score.play()
-
         if self.game_over:
             sfx_die = SoundLoader.load('flappy/audio/die.wav')
             sfx_die.play()
