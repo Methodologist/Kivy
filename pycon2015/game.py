@@ -1,7 +1,5 @@
 import random
 import kivy
-kivy.require('1.9.1')
-
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.uix.image import Image
@@ -9,12 +7,14 @@ from kivy.core.window import Window
 from kivy.clock import Clock
 from kivy.uix.label import Label
 from kivy.core.audio import SoundLoader
+kivy.require('1.9.1')
 
 
 class Sprite(Image):
     def __init__(self, **kwargs):
         super(Sprite, self).__init__(**kwargs)
         self.size = self.texture_size
+
 
 class Bird(Sprite):
     def __init__(self, pos):
@@ -37,6 +37,7 @@ class Bird(Sprite):
         sfx_flap = SoundLoader.load('flappy/audio/flap.wav')
         sfx_flap.play()
 
+
 class Background(Widget):
     def __init__(self, source):
         super(Background, self).__init__()
@@ -52,6 +53,7 @@ class Background(Widget):
         if self.image.right <= 0:
             self.image.x = 0
             self.image_dupe.x = self.width
+
 
 class Pipe(Widget):
     def __init__(self, pos):
@@ -71,8 +73,10 @@ class Pipe(Widget):
         if self.right < 0:
             self.parent.remove_widget(self)
 
+
 class Pipes(Widget):
     add_pipe = 0
+
     def update(self, dt):
         for child in list(self.children):
             child.update()
@@ -82,11 +86,13 @@ class Pipes(Widget):
             self.add_widget(Pipe(pos=(self.width, y)))
             self.add_pipe = 1.5
 
+
 class Ground(Sprite):
     def update(self):
         self.x -= 2
         if self.x < -24:
             self.x += 24
+
 
 class Game(Widget):
     def __init__(self):
@@ -138,6 +144,7 @@ class Game(Widget):
             sfx_die = SoundLoader.load('flappy/audio/die.wav')
             sfx_die.play()
             self.over_label.opacity = 1
+
 
 class GameApp(App):
     def build(self):
